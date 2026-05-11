@@ -69,8 +69,8 @@ fun MyApp(modifier: Modifier = Modifier) {
                 verticalArrangement = Arrangement.spacedBy(10.dp),
                 horizontalAlignment = Alignment.CenterHorizontally
             ) {
+                MyContent(innerPading)
                 SearchButton()
-                //MyContent(innerPading)
             }
         }
     }
@@ -120,8 +120,25 @@ fun BluetoothDevicesList(devices: List<BluetoothDevice>) {
         contentPadding = PaddingValues(16.dp),
         verticalArrangement = Arrangement.spacedBy(8.dp)
     ) {
-        items(devices) { devices ->
-            DeviceItem(devices)
+        if (devices.isNotEmpty()) {
+            items(devices) { devices ->
+                DeviceItem(devices)
+            }
+        } else {
+            item { Item() }
+        }
+    }
+}
+
+@Composable
+fun Item(){
+    Card(
+        modifier = Modifier.fillMaxWidth(),
+        elevation = CardDefaults.cardElevation(defaultElevation = 2.dp)
+    ) {
+        Column() {
+            Text(text = "Test", style = MaterialTheme.typography.titleMedium)
+            Text(text = "Test", style = MaterialTheme.typography.titleMedium)
         }
     }
 }
@@ -134,7 +151,7 @@ fun DeviceItem(device: BluetoothDevice) {
     ) {
         Column(modifier = Modifier.padding(16.dp)) {
             val name = try {
-                device.name ?: "-"
+                device.name ?: "Unknow"
             } catch (e: SecurityException) {
                 "Without Permissions"
             }
@@ -165,7 +182,7 @@ fun getConnectedBluetoothDevices(context: Context): List<BluetoothDevice> {
 
 @Preview(showBackground = true, widthDp = 320, heightDp = 320)
 @Composable
-fun GreetingPreview() {
+private fun GreetingPreview() {
     SocketServerTheme {
         MyApp(Modifier.fillMaxSize())
     }
